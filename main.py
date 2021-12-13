@@ -49,8 +49,9 @@ def newpaste():
 <input type="submit" value="Create Paste">
 </form>""")
 	if(flask.request.method=="POST"):
-		pastes[uuid.uuid5(uuid.UUID("00000000-0000-0000-0000-000000000000"),flask.request.form["code"])]=flask.request.form["code"]
-		return(styles+"<a href=\"/paste/view/"+uuid.uuid5(uuid.UUID("00000000-0000-0000-0000-000000000000"),flask.request.form["code"])+"\">Your paste!</a>")
+		guid=str(uuid.uuid5(uuid.UUID("00000000-0000-0000-0000-000000000000"),flask.request.form["code"]))
+		pastes[guid]=flask.request.form["code"]
+		return(styles+"<a href=\"/paste/view/"+guid+"\">Your paste!</a>")
 
 @app.route("/paste/view/<guid>")
 def getpaste(guid):
