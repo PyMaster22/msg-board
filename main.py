@@ -2,21 +2,21 @@ import flask,hashlib,uuid
 app=flask.Flask(__name__)
 content=""
 sanitize=lambda x:"".join(["&#"+str(ord(i))+";" for i in x])
-styles="""*{background-color:#000;font-family:"Courier New",Courier,monospace,mono;color:#fff;font-size:25px;}
-.box{border:#888 0.2ch solid;}"""
+styles="""<style>*{background-color:#000;font-family:"Courier New",Courier,monospace,mono;color:#fff;font-size:25px;}
+.box{border:#888 0.2ch solid;}</style>"""
 pastes={}
 
 @app.route("/",methods=["GET","POST"])
 def index():
 	global content
 	if(flask.request.method=="GET"):
-		return("<style>"+styles+"""</style><form action="/" method="POST">
+		return(styles+"""<form action="/" method="POST">
 <input name="alias" type="text" required="required" placeholder="Alias"/><br/>
 <textarea rows=4 columns=10 placeholder="Message" name="msg"></textarea><br/>
 <input type="submit" name="Send"/><br><pre>"""+content+"</pre>",200,{"Content-Type":"text/html;charset=utf-8"})
 	if(flask.request.method=="POST"):
 		content+="<b>"+sanitize(flask.request.form["alias"])+"</b><br><br><div class=\"box\">"+sanitize(flask.request.form["msg"])+"</div><!--\n-->"
-		return("<style>"+styles+"""</style><form action="/" method="POST">
+		return(styles+"""<form action="/" method="POST">
 <input name="alias" type="text" required="required" placeholder="Alias" """+"value=\""+flask.request.form["alias"]+"\""+"""/><br/>
 <textarea rows=4 columns=10 placeholder="Message" name="msg"></textarea><br/>
 <input type="submit" name="Send"/><br><pre>"""+content+"</pre>",200,{"Content-Type":"text/html;charset=utf-8"})
@@ -25,8 +25,8 @@ def index():
 def delete_content():
 	global content
 	if(flask.request.method=="GET"):
-		return("<form action=\"/delete.php\" method=\"POST\">\
-<input type=\"text\" name=\"code\" required>\
+		return(styles+"<form action=\"/delete.php\" method=\"POST\">\
+<input type=\"text\" name=\"code\" required><br>\
 <input type=\"submit\" name=\"Submit\">\
 </form>",200,{"Content-Type":"text/html;charset=utf-8"})
 	if(flask.request.method=="POST"):
